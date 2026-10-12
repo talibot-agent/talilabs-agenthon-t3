@@ -16,6 +16,7 @@ def _one(args):
 
 
 def main(argv=None):
+    import os, tempfile
     ap = argparse.ArgumentParser(prog="simulate-batch")
     ap.add_argument("verb", nargs="?", default="simulate-batch", choices=["simulate-batch"])
     ap.add_argument("--batch-dir", required=True)
@@ -26,6 +27,7 @@ def main(argv=None):
     if not subs:
         raise SystemExit(f"simulate-batch: no sub-scenarios (*.json) found in {batch_dir}")
     jobs = [(p, out_dir / p.stem / "trace.parquet") for p in subs]
+    os.chdir(tempfile.mkdtemp(prefix="t3batch-"))
     t0 = time.perf_counter()
     n = min(len(jobs), t3fast.cpu_quota())
     if n > 1:
