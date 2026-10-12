@@ -8,6 +8,10 @@ from abides_fork.simulate import simulate
 
 def _one(args):
     sub_path, out = args
+    # ABIDES' kernel creates ./log/<epoch-seconds> with makedirs(exist_ok=False); parallel
+    # sub-runs starting in the same second would collide. Give each process its own cwd.
+    import os, tempfile
+    os.chdir(tempfile.mkdtemp(prefix="t3sub-"))
     return simulate(sub_path, out)
 
 
@@ -17,7 +21,7 @@ def main(argv=None):
     ap.add_argument("--batch-dir", required=True)
     ap.add_argument("--out-dir", required=True)
     a = ap.parse_args(argv)
-    batch_dir, out_dir = pathlib.Path(a.batch_dir), pathlib.Path(a.out_dir)
+    batch_dir, out_dir = pathlib.Path(a.batch_dir).resolve(), pathlib.Path(a.out_dir).resolve()
     subs = sorted(batch_dir.glob("*.json"))
     if not subs:
         raise SystemExit(f"simulate-batch: no sub-scenarios (*.json) found in {batch_dir}")
