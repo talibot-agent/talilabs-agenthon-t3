@@ -1,6 +1,8 @@
 """Parallel simulate-batch: each sub-scenario runs in its own forked process, so its
 output is exactly its isolated run (counters reset, RNG re-seeded per sub)."""
 import json, pathlib, sys, time, argparse, multiprocessing as mp
+import t3lazy
+t3lazy.install()
 import t3fast
 t3fast.apply()
 from abides_fork.simulate import simulate

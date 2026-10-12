@@ -220,6 +220,9 @@ def apply() -> None:
     import abides_fork.trace as _tr
     _tr.parse_logs_df = parse_logs_df
 
+    # ---- v5: skip the discarded summary_log.bz2 pickle (written to a temp dir nobody reads) ----
+    k.Kernel.write_summary_log = lambda self: None
+
     # The simulator allocates millions of short-lived objects; the cyclic GC only
     # costs time here (16G memory cap per card). Freeze startup objects, raise thresholds.
     gc.freeze()

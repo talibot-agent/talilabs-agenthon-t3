@@ -6,6 +6,8 @@ for i, a in enumerate(argv):
     if a in ("--config", "--out") and i + 1 < len(argv):
         argv[i + 1] = os.path.abspath(argv[i + 1])
 os.chdir(tempfile.mkdtemp(prefix="t3run-"))
+import t3lazy
+t3lazy.install()
 import t3fast
 t3fast.apply()
 from abides_fork.simulate import main
