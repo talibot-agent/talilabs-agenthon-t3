@@ -1,5 +1,5 @@
 name: build-and-push
-on: { push: { branches: [main] }, workflow_dispatch: {} }
+on: { push: { tags: ['v*'] }, workflow_dispatch: {} }
 permissions: { contents: read, packages: write }
 jobs:
   build:
@@ -11,7 +11,8 @@ jobs:
         run: docker build --platform=linux/amd64 -t t3base:latest baselines/
       - name: build entry
         run: |
-          IMG=ghcr.io/${GITHUB_REPOSITORY,,}:dev
+          TAG=${GITHUB_REF_NAME}; [ "$GITHUB_REF_TYPE" = tag ] || TAG=manual-${GITHUB_SHA::7}
+          IMG=ghcr.io/${GITHUB_REPOSITORY,,}:$TAG
           docker build --platform=linux/amd64 -t $IMG .
           docker push $IMG
           docker inspect --format='{{index .RepoDigests 0}}' $IMG | tee digest.txt
