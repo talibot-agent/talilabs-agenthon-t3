@@ -1,0 +1,4 @@
+MIT License — Tali Labs additions (t3fast.py, run_*.py, shims, Dockerfile, workflow).
+Copyright (c) 2026 Tali Labs. Permission is hereby granted, free of charge, to any person obtaining a copy of this software, to deal in the Software without restriction, subject to including this notice. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+baselines/ is from Agenthon-2026/track3-simulation-public (MIT, see LICENSE-qfbench2-track3-MIT).
+ABIDES (jpmorganchase/abides-jpmc-public, BSD-3-Clause) is fetched at build time, not vendored.

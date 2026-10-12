@@ -1,0 +1,19 @@
+name: build-and-push
+on: { push: { branches: [main] }, workflow_dispatch: {} }
+permissions: { contents: read, packages: write }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+      - name: build baseline (organizers' pinned ABIDES)
+        run: docker build --platform=linux/amd64 -t t3base:latest baselines/
+      - name: build entry
+        run: |
+          IMG=ghcr.io/${GITHUB_REPOSITORY,,}:dev
+          docker build --platform=linux/amd64 -t $IMG .
+          docker push $IMG
+          docker inspect --format='{{index .RepoDigests 0}}' $IMG | tee digest.txt
+      - uses: actions/upload-artifact@v4
+        with: { name: digest, path: digest.txt }
